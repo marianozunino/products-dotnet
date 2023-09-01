@@ -1,0 +1,34 @@
+@model Products.Common.Dtos.ProductDto
+
+@* create a pretty form to disaply the product details *@
+
+<h1>Product Details</h1>
+
+<form asp-action="Details" method="post" asp-route-id="@Model.Id">
+
+    <div class="form-group">
+        <label asp-for="Id" class="control-label"></label>
+        <input asp-for="Id" class="form-control" disabled/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" readonly/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Color" class="control-label"></label>
+        <input asp-for="Color" class="form-control" readonly/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Brand" class="control-label"></label>
+        <input asp-for="Brand" class="form-control" readonly/>
+    </div>
+
+    <div>
+        <input type="submit"
+               class="btn btn-primary mt-2"
+               value="Save"/>
+    </div>
+</form>

@@ -1,0 +1,44 @@
+@using Products.Common.Types
+@model Products.Common.Dtos.ProductDto
+   
+
+<h1>Edit Product</h1>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Id" class="control-label"></label>
+        <input asp-for="Id" class="form-control" disabled/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Color" class="control-label"></label>
+        <select asp-for="Color" asp-items="@Html.GetEnumSelectList<Color>()" class="form-control">
+            <option value="">-- Select Color --</option>
+        </select>
+        <span asp-validation-for="Color" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Brand" class="control-label"></label>
+        <input asp-for="Brand" class="form-control"/>
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+
+<div>
+    <input type="submit" 
+           value="Save"
+           class="btn btn-primary mt-2"
+    />
+    
+</div>
+
+</form>
+
+
+
