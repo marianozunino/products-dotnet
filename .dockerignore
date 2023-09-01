@@ -1,0 +1,33 @@
+# Exclude common build and development files
+bin/
+obj/
+.vscode/
+.vs/
+.idea/
+*.sln.DotSettings.user
+
+# Exclude version control files
+.git/
+.gitignore
+.gitattributes
+
+# Exclude macOS specific files
+.DS_Store
+
+# Exclude user-specific or editor-specific files
+*.user
+*.suo
+*.suo.user
+*.userprefs
+
+# Exclude NuGet package cache
+packages/
+*.nupkg
+
+# Exclude build scripts or configuration files
+build/
+*.bat
+*.cmd
+*.ps1
+
+# Exclude any other files or directories not needed for the image

@@ -1,0 +1,35 @@
+@model IEnumerable<Products.Common.Dtos.ProductDto>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<a asp-action="Create" class="btn btn-primary">Create</a> 
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+<tbody>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Id</td>
+        <td>@item.Name</td>
+        <td>@item.Color</td>
+        <td>@item.Brand</td>
+        <!-- Actions Buttons -->
+        <td class="text-center">
+            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
+            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+        </td>
+    </tr>
+}
+</tbody>
+</table>
