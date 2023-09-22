@@ -7,17 +7,19 @@ namespace Products.Business.Persistence;
 public sealed class DataContext : DbContext
 {
     public required DbSet<Product> Products { get; set; }
+    public required DbSet<User> Users { get; set; }
+
+    public DataContext() { }
+
+    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
     protected override void OnConfiguring
         (DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseInMemoryDatabase("ProductsDB");
+        optionsBuilder.UseSqlite("Data Source=../products.db");
+
     }
-    
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
-    {
-        Database.EnsureCreated();
-    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,7 +61,7 @@ public sealed class DataContext : DbContext
                 Color = Color.Red
             }
         );
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }
