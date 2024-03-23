@@ -1,32 +1,34 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Products.Backoffice.Models;
-using Products.Business.Service;
-using Products.Common.Dtos;
+using Products.Business.Domain;
+using Products.Business.Persistence;
 using Products.Common.Exceptions;
 
 namespace Products.Backoffice.Controllers;
 
 public class ProductController : Controller
 {
-    private readonly IProductService _productService;
+    private readonly DataContext _ctx;
+    private readonly ILogger<ProductController> _logger;
 
-    public ProductController(IProductService productService)
+    public ProductController(DataContext dbContext, ILogger<ProductController> logger)
     {
-        _productService = productService;
+        _ctx = dbContext;
+        _logger = logger;
     }
-    
+
     // GET
     public IActionResult Index()
     {
-        var products = _productService.GetProducts();
+        var products = _ctx.Products.ToList();
         return View(products);
     }
-    
+
     // GET /product/1
     public IActionResult Details(int id)
     {
-        var product = _productService.GetProduct(id);
+        var product = _ctx.Products.Find(id);
         return View(product);
     }
 
@@ -34,46 +36,61 @@ public class ProductController : Controller
     {
         return View();
     }
-    
+
     [HttpPost]
-    public IActionResult Create(CreateProductDto productDto)
+    public IActionResult Create(Product product)
     {
         if (!ModelState.IsValid)
         {
-            return View(productDto);
+            return View(product);
         }
-        _productService.AddProduct(productDto);
+        _ctx.Products.Add(product);
+        _ctx.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Edit(int id)
     {
-        var product = _productService.GetProduct(id);
+        var product = _ctx.Products.Find(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
         return View(product);
     }
-    
+
     [HttpPost]
-    public IActionResult Edit(int id, ProductDto productDto)
+    public IActionResult Edit(int id, Product product)
     {
+        if (id != product.Id)
+        {
+            return BadRequest();
+        }
+
         if (!ModelState.IsValid)
         {
-            return View(productDto);
+            return View(product);
         }
-        _productService.UpdateProduct(id, new UpdateProductDto()
-        {
-            Name = productDto.Name,
-            Brand = productDto.Brand,
-            Color = productDto.Color
-                
-        });
+
+        _ctx.Products.Update(product);
+        _ctx.SaveChanges();
         return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Delete(int id)
     {
         try
+
         {
-            _productService.DeleteProduct(id);
+            var p = _ctx.Products.Find(id);
+
+            if (p == null)
+            {
+                return NotFound();
+            }
+
+            _ctx.Products.Remove(p);
+            _ctx.SaveChanges();
         }
         catch (Exception e)
         {
@@ -81,12 +98,12 @@ public class ProductController : Controller
         }
         return RedirectToAction(nameof(Index));
     }
-    
-    [Route("Error/{statusCode:int}")] 
-    public IActionResult Error(int statusCode) 
-    {     
-        var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();      
-    
-        return View(new ErrorViewModel { StatusCode = statusCode, OriginalPath = feature?.OriginalPath }); 
-    } 
+
+    [Route("Error/{statusCode:int}")]
+    public IActionResult Error(int statusCode)
+    {
+        var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+
+        return View(new ErrorViewModel { StatusCode = statusCode, OriginalPath = feature?.OriginalPath });
+    }
 }
