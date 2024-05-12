@@ -6,6 +6,7 @@ using Products.Business.Service;
 
 namespace Products.API;
 
+
 internal class Program
 {
     public static void Main(string[] args)
@@ -20,6 +21,8 @@ internal class Program
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddDbContext<DataContext>();
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 
 
