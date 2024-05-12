@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
+using AutoMapper;
 using Products.Business.Domain;
 using Products.Business.Repository;
 using Products.Common.Dtos;
@@ -9,19 +10,20 @@ namespace Products.Business.Service;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly IMapper _mapper;
 
-    // Inject ProductRepository
-    public ProductService(IProductRepository productRepository)
+    // Inject ProductRepository and AutoMapper
+    public ProductService(IProductRepository productRepository, IMapper mapper)
     {
         _productRepository = productRepository;
+        _mapper = mapper;
     }
 
 
     public IEnumerable<ProductDto> GetProducts()
     {
         var products = _productRepository.GetProducts();
-
-        return products.Select(MapProductToProductDto!);
+        return _mapper.Map<List<ProductDto>>(products);
     }
 
 
@@ -29,7 +31,7 @@ public class ProductService : IProductService
     {
         var product = _productRepository.GetProduct(id);
         if (product == null) throw new RecordNotFoundException("Product not found");
-        return MapProductToProductDto(product);
+        return _mapper.Map<ProductDto>(product);
     }
 
     public ProductDto AddProduct(CreateProductDto product)
@@ -41,7 +43,7 @@ public class ProductService : IProductService
             Brand = product.Brand
         });
 
-        return MapProductToProductDto(createdProduct);
+        return _mapper.Map<ProductDto>(createdProduct);
     }
 
 
@@ -64,7 +66,7 @@ public class ProductService : IProductService
 
         _productRepository.UpdateProduct(product);
 
-        return GetProduct(id);
+        return this.GetProduct(id);
     }
 
     public ProductDto PatchProduct(int id,
@@ -74,30 +76,14 @@ public class ProductService : IProductService
         if (product == null) throw new RecordNotFoundException("Product not found");
 
         // Apply the patch
-        var update = new UpdateProductDto(product.Name, product.Color, product.Brand);
+        var update = _mapper.Map<UpdateProductDto>(product);
         productDto.ApplyTo(update);
 
         // Update the product
-        product.Name = update.Name;
-        product.Color = update.Color;
-        product.Brand = update.Brand;
+        _mapper.Map(update, product);
 
         _productRepository.UpdateProduct(product);
 
         return this.GetProduct(id);
     }
-
-
-    // TODO: This can be avoided using AutoMapper, also this should not be in this class
-    private ProductDto MapProductToProductDto(Product product)
-    {
-        return new ProductDto(
-            product.Name,
-            product.Color.ToString(),
-            product.Brand,
-            product.Id
-        );
-    }
-
-
 }

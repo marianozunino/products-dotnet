@@ -3,14 +3,13 @@ using Products.Common.Types;
 
 namespace Products.Common.Dtos;
 
-public class CreateProductDto
-{
+public record CreateProductDto(
     [Required]
-    public string Name { get; set; }
-    
+     string Name,
+
     [Required]
-    public Color Color { get; set; }
-    
+     Color Color,
+
     [Required]
-    public string Brand { get; set; }
-}
+    string Brand
+);
