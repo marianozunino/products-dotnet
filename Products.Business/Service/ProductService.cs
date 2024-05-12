@@ -68,7 +68,7 @@ public class ProductService : IProductService
     {
         return new ProductDto(
             product.Name,
-            product.Color,
+            product.Color.ToString(),
             product.Brand,
             product.Id
         );

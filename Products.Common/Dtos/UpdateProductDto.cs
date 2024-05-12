@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using Products.Common.Types;
-
 namespace Products.Common.Dtos;
 
-public class UpdateProductDto
-{
+public record UpdateProductDto(
     [Required]
     [MinLength(1)]
-    public string Name { get; set; }
+        string Name,
     [Required]
-    public Color Color { get; set; }
+        Color Color,
     [Required]
-    public string Brand { get; set; }
-}
+        string Brand
+);
+
+
