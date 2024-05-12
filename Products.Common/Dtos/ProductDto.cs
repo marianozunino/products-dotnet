@@ -1,5 +1,3 @@
-using Products.Common.Types;
-
 namespace Products.Common.Dtos;
 
 public record ProductDto(

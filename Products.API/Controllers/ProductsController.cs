@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Products.Business.Service;
 using Products.Common.Dtos;
@@ -25,22 +26,28 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<ProductDto> Get(int id)
     {
-         return Ok(_productService.GetProduct(id));
-         
+        return Ok(_productService.GetProduct(id));
+
     }
-    
+
     [HttpPost]
     public ActionResult<ProductDto> Post(CreateProductDto product)
     {
         return Ok(_productService.AddProduct(product));
     }
-    
+
+    [HttpPatch("{id}")]
+    public ActionResult<ProductDto> Patch(int id, JsonPatchDocument<UpdateProductDto> product)
+    {
+        return Ok(_productService.PatchProduct(id, product));
+    }
+
     [HttpPut("{id}")]
     public ActionResult<ProductDto> Put(int id, UpdateProductDto product)
     {
         return Ok(_productService.UpdateProduct(id, product));
     }
-    
+
     [HttpDelete("{id}")]
     public ActionResult Delete(int id)
     {

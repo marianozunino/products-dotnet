@@ -1,4 +1,5 @@
-﻿using Products.Business.Domain;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Products.Business.Domain;
 using Products.Business.Repository;
 using Products.Common.Dtos;
 using Products.Common.Exceptions;
@@ -43,6 +44,15 @@ public class ProductService : IProductService
         return MapProductToProductDto(createdProduct);
     }
 
+
+    public void DeleteProduct(int id)
+    {
+        if (!_productRepository.ProductExists(id)) throw new RecordNotFoundException("Product not found");
+        _productRepository.DeleteProduct(id);
+    }
+
+
+
     public ProductDto UpdateProduct(int id, UpdateProductDto productDto)
     {
         var product = _productRepository.GetProduct(id);
@@ -57,11 +67,26 @@ public class ProductService : IProductService
         return GetProduct(id);
     }
 
-    public void DeleteProduct(int id)
+    public ProductDto PatchProduct(int id,
+            JsonPatchDocument<UpdateProductDto> productDto)
     {
-        if (!_productRepository.ProductExists(id)) throw new RecordNotFoundException("Product not found");
-        _productRepository.DeleteProduct(id);
+        var product = _productRepository.GetProduct(id);
+        if (product == null) throw new RecordNotFoundException("Product not found");
+
+        // Apply the patch
+        var update = new UpdateProductDto(product.Name, product.Color, product.Brand);
+        productDto.ApplyTo(update);
+
+        // Update the product
+        product.Name = update.Name;
+        product.Color = update.Color;
+        product.Brand = update.Brand;
+
+        _productRepository.UpdateProduct(product);
+
+        return this.GetProduct(id);
     }
+
 
     // TODO: This can be avoided using AutoMapper, also this should not be in this class
     private ProductDto MapProductToProductDto(Product product)
@@ -73,4 +98,6 @@ public class ProductService : IProductService
             product.Id
         );
     }
+
+
 }
