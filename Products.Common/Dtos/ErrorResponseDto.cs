@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace Products.Common.Dtos
 {
@@ -9,7 +9,7 @@ namespace Products.Common.Dtos
 
     public override string ToString()
     {
-      return JsonConvert.SerializeObject(this);
+      return JsonSerializer.Serialize(this);
     }
   }
 
