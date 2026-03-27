@@ -1,4 +1,5 @@
 using Products.API.Middlewares;
+using Scalar.AspNetCore;
 using Products.Business.Persistence;
 using Products.Business.Repository;
 using Products.Business.Service;
@@ -15,9 +16,7 @@ internal class Program
 // Add services to the container.
 
         builder.Services.AddControllers().AddNewtonsoftJson();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddOpenApi();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddDbContext<DataContext>();
@@ -41,8 +40,8 @@ internal class Program
 // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();

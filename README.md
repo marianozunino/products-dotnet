@@ -1,186 +1,104 @@
-# Aplicación de Gestión de Productos con .NET y Svelte
+## Ejemplo de Aplicación .NET con MVC y API REST 🚀
 
-Este proyecto es un ejemplo educativo que muestra cómo crear una aplicación web completa utilizando .NET para el backend y Svelte para el frontend, implementando patrones de diseño modernos y buenas prácticas de desarrollo.
+A continuación, encontrarás instrucciones detalladas sobre cómo configurar y ejecutar este proyecto .NET. El proyecto consta de varios componentes que incluyen lógica de negocio, aplicaciones web y una API REST para administrar productos.
 
-## Descripción del Proyecto
+## Estructura del Proyecto
 
-La aplicación permite gestionar un catálogo de productos con operaciones CRUD (Crear, Leer, Actualizar, Eliminar) a través de diferentes interfaces:
-
-- **API REST**: Ofrece endpoints para manipular productos a través de HTTP
-- **Backoffice (MVC)**: Interfaz administrativa basada en ASP.NET MVC
-- **Frontoffice (Svelte)**: Interfaz de usuario moderna construida con SvelteKit
-
-## Arquitectura del Proyecto
-
-El proyecto sigue una arquitectura en capas con los siguientes componentes:
+La estructura del proyecto es la siguiente:
 
 ```
-- Products.sln                 # Solución principal
-- Products.Common/             # DTOs, excepciones y tipos compartidos
-- Products.Business/           # Lógica de negocio, servicios y repositorios
-- Products.API/                # API REST
-- Products.Backoffice/         # Aplicación MVC para administración
-- Products.Frontoffice/        # Frontend con Svelte
+- global.json
+- Products.sln
+- Products.Common/
+- Products.Business/
+- Products.Backoffice/
+- Products.API/
+- Products.Frontoffice/
 ```
 
-### Patrón de Arquitectura
+- **global.json**: Archivo de configuración global para la versión de .NET SDK.
+- **Products.sln**: Archivo de solución principal del proyecto.
+- **Products.Common**: Contiene DTOs y excepciones compartidas.
+- **Products.Business**: Contiene la lógica de negocio del proyecto, incluidos servicios y repositorios.
+- **Products.Backoffice**: Aplicación MVC para el backoffice de administración.
+- **Products.API**: API REST para administrar productos. En desarrollo, la documentación interactiva está disponible en `/scalar/v1`.
+- **Products.Frontoffice**: Proyecto Svelte que muestra cómo consumir la API REST.
 
-- **Diseño por Capas**: Separación clara de responsabilidades entre capas
-- **Patrón Repositorio**: Abstracción del acceso a datos
-- **Inyección de Dependencias**: Acoplamiento débil entre componentes
-- **MVC (Model-View-Controller)**: Para la aplicación Backoffice
-- **REST**: Para la API de servicios
+## Pasos para Iniciar
 
-## Tecnologías Utilizadas
+A continuación, se describen los pasos para configurar y ejecutar el proyecto:
 
-### Backend
+1. **Requisitos Previos**:
+   - Asegúrate de tener instalado el SDK de .NET 10 en tu máquina.
+   - Asegúrate de tener Node.js instalado para ejecutar el proyecto Svelte.
 
-- **.NET 9**: Framework base para el desarrollo
-- **ASP.NET Core**: Para la API REST y aplicación MVC
-- **Entity Framework Core**: ORM para acceso a datos
-- **AutoMapper**: Para mapeo entre objetos de dominio y DTOs
-- **Newtonsoft.Json**: Para serialización/deserialización JSON
-- **In-Memory Database**: Para almacenamiento de datos (en este ejemplo educativo)
+2. **Clonar el Repositorio**:
+   Clona el repositorio del proyecto desde su ubicación.
 
-### Frontend
-
-- **SvelteKit**: Framework para la creación de la interfaz de usuario
-- **TypeScript**: Para tipado estático en el frontend
-- **Axios**: Para comunicación HTTP con la API
-- **Zod**: Para validación de datos en el cliente
-
-### DevOps
-
-- **Docker**: Para contenerización de la aplicación
-- **Fly.io**: Ejemplo de despliegue en la nube
-
-## Patrones de Diseño Implementados
-
-- **DTO (Data Transfer Objects)**: Para transferencia de datos entre capas
-- **Repositorio**: Para abstracción del acceso a datos
-- **Servicios**: Para encapsular la lógica de negocio
-- **Middleware**: Para manejo centralizado de excepciones
-- **CORS**: Configuración para permitir solicitudes cross-origin
-- **Enumeraciones**: Para tipos de datos con valores predefinidos (Colores)
-
-## Configuración del Entorno de Desarrollo
-
-### Requisitos Previos
-
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- [Node.js](https://nodejs.org/) (v20.x o superior)
-
-### Pasos para Ejecutar el Proyecto
-
-1. **Clonar el Repositorio**:
-
-   ```
-   git clone <url-del-repositorio>
-   cd Products
-   ```
-
-2. **Restaurar Paquetes NuGet**:
-
+3. **Restaurar Paquetes NuGet**:
+   Abre una terminal en la ubicación de la solución (`Products.sln`) y ejecuta el comando:
    ```
    dotnet restore
    ```
 
-3. **Ejecutar la API REST**:
+4. **Ejecutar Aplicaciones .NET**:
+   - Para el proyecto Backoffice, navega a la carpeta `Products.Backoffice` en la terminal y ejecuta:
+     ```bash
+     dotnet run
+     ```
+     o desde la raiz del proyecto:
+     ```bash
+     dotnet run --project Products.Backoffice
+     ```
+   - Para el proyecto API, navega a la carpeta `Products.API` en la terminal y ejecuta:
+     ```bash
+     dotnet run
+     ```
+     o desde la raiz del proyecto:
+     ```bash
+     dotnet run --project Products.API
+     ```
 
-   ```
-   dotnet run --project Products.API
-   ```
+5. **Ejecutar Proyecto Svelte**:
+   - Navega a la carpeta `Products.Frontoffice` en la terminal.
+   - Instala las dependencias ejecutando `npm install`.
+   - Luego, inicia la aplicación con `npm run dev`.
 
-   La API estará disponible en: https://localhost:7234 (o http://localhost:5192)
+6. **¡Listo!**:
+   Ahora puedes acceder a las aplicaciones desde tu navegador y probar la API REST.
+   Además, el proyecto Svelte te mostrará cómo consumir la API desde un frontend.
 
-4. **Ejecutar la Aplicación Backoffice (MVC)**:
+## Migraciones (branch `migrations`)
 
-   ```
-   dotnet run --project Products.Backoffice
-   ```
+Instalar `dotnet ef` ([how-to](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)) para poder gestionar las migraciones.
 
-   La aplicación MVC estará disponible en: https://localhost:7103
+- `dotnet ef database update`: Actualiza la base de datos
+- `dotnet ef migrations add <nombre de la migración>`: Crea una nueva migración
+- `dotnet ef migrations remove <nombre de la migración>`: Elimina una migración
+- `dotnet ef migrations list`: Lista las migraciones
 
-5. **Ejecutar la Aplicación Frontoffice (Svelte)**:
-   ```
-   cd Products.Frontoffice
-   npm install
-   npm run dev
-   ```
-   La aplicación Svelte estará disponible en: http://localhost:5173
-
-## Estructura del Código
-
-### Products.Common
-
-Contiene elementos compartidos:
-
-- **Dtos/**: Objetos de transferencia de datos
-- **Types/**: Enumeraciones y tipos personalizados
-- **Exceptions/**: Excepciones personalizadas
-
-### Products.Business
-
-Contiene la lógica de negocio:
-
-- **Domain/**: Entidades de dominio
-- **Service/**: Servicios que implementan la lógica de negocio
-- **Repository/**: Acceso a datos
-- **Persistence/**: Contexto de Entity Framework
-- **AutoMapperProfiles/**: Configuración de mapeo entre entidades y DTOs
-
-### Products.API
-
-API REST:
-
-- **Controllers/**: Endpoints de la API
-- **Middlewares/**: Configuración de middleware para manejo de excepciones
-
-### Products.Backoffice
-
-Aplicación MVC:
-
-- **Controllers/**: Controladores MVC
-- **Views/**: Vistas Razor
-- **Models/**: ViewModels específicos para la UI
-
-### Products.Frontoffice
-
-Aplicación Svelte:
-
-- **src/routes/**: Páginas y componentes
-- **src/lib/**: Utilidades, stores y lógica compartida
-- **src/lib/api.ts**: Cliente de la API REST
-
-## Aspectos Educativos del Proyecto
-
-Este proyecto sirve como referencia para aprender sobre:
-
-1. **Arquitectura en Capas**: Separación de responsabilidades
-2. **API REST**: Principios y buenas prácticas
-3. **Inyección de Dependencias**: Configuración y uso en .NET
-4. **Entity Framework Core**: Configuración básica y seeds
-5. **Manejo de Excepciones**: Middleware centralizado
-6. **Validación de Datos**: Tanto en backend como frontend
-7. **Frontend Moderno**: Integración con frameworks modernos (Svelte)
-8. **Serialización/Deserialización**: Conversión entre objetos y JSON
-9. **Enumeraciones**: Uso en C# y TypeScript
-10. **Patrones de Repositorio y Servicio**: Implementación práctica
-
-## Despliegue
-
-El proyecto incluye un Dockerfile para contenerización y puede ser desplegado en servicios como Fly.io:
-
-```
-fly deploy
+```bash
+dotnet ef database update
+dotnet ef migrations add <nombre de la migración>
+dotnet ef migrations remove <nombre de la migración>
+dotnet ef migrations list
 ```
 
-Un ejemplo de despliegue está disponible en: https://tsi-products.fly.dev/
+**Nota**: Como este proyecto utiliza la base de datos SQLite, es importante que se respete la ubicación de la base de datos.
+Es por ello que los comandos deben ser ejecutados desde la raiz del proyecto haciendo uso del flag `--project`.
 
-## Licencia
+```bash
+dotnet ef database update --project Products.Business
+dotnet ef migrations add <nombre de la migración> --project Products.Business
+dotnet ef migrations remove <nombre de la migración> --project Products.Business
+dotnet ef migrations list --project Products.Business
+```
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+## Deploy en Fly.io
 
----
+Se ha realizado un deploy de la aplicación MVC en Fly.io. Puedes acceder a ella desde el siguiente enlace:
+~~https://tsi-products.fly.dev/~~
 
-**Nota**: Este proyecto es principalmente educativo y está diseñado para demostrar conceptos y patrones en un entorno simplificado. Algunas prácticas pueden necesitar ser adaptadas para aplicaciones de producción a gran escala.
+https://products.mz.uy/
+
+

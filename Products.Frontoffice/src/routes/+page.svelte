@@ -5,14 +5,11 @@
   import Table from "./table.svelte";
   import ProductForm from "./upsert-product-form.svelte";
 
-  let showPopup = false;
-  let product: Product;
+  let showPopup = $state(false);
+  let product = $state<Product>({ name: "", brand: "" });
 
   const resetProduct = () => {
-    product = {
-      name: "",
-      brand: "",
-    };
+    product = { name: "", brand: "" };
   };
 
   const closeModal = () => {
@@ -25,19 +22,18 @@
     } else {
       createProduct(product);
     }
-    showPopup = false;
     closeModal();
   };
 
-  const handleEdit = (event: CustomEvent<Product>) => {
-    product = event.detail;
+  const handleEdit = (p: Product) => {
+    product = p;
     showPopup = true;
   };
 </script>
 
 <h1>Welcome to SvelteKit</h1>
 <p>
-  Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
+  Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation
 </p>
 
 {#await getAllProducts()}
@@ -48,7 +44,7 @@
       <button
         type="button"
         class="btn btn-success"
-        on:click={() => {
+        onclick={() => {
           showPopup = true;
           resetProduct();
         }}
@@ -57,17 +53,16 @@
       </button>
     </div>
   </div>
-  <Table on:edit={handleEdit} />
+  <Table onedit={handleEdit} />
   <Modal open={showPopup} onClose={closeModal}>
-    <h5 class="modal-title" id="sampleModalLabel" slot="title">
-      {product.id ? "Edit Product" : "Add Product"}
-    </h5>
-    <ProductForm
-      {product}
-      on:save={upsertProduct}
-      on:dismiss={() => closeModal()}
-      slot="body"
-    />
+    {#snippet title()}
+      <h5 class="modal-title" id="sampleModalLabel">
+        {product.id ? "Edit Product" : "Add Product"}
+      </h5>
+    {/snippet}
+    {#snippet body()}
+      <ProductForm bind:product onsave={upsertProduct} ondismiss={closeModal} />
+    {/snippet}
   </Modal>
 {:catch error}
   <p style="color: red">{error.message}</p>

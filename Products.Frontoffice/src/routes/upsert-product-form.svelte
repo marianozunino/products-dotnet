@@ -6,46 +6,20 @@
     ProductSchema,
     ColorKeys,
   } from "$lib";
-  import { createEventDispatcher } from "svelte";
-  import type { ZodFormattedError } from "zod";
 
-  const dispatchSave = createEventDispatcher<{ save: Product }>();
-  const dispatchDismiss = createEventDispatcher<{ dismiss: void }>();
-
-  const saveProduct = (product: Product) => {
-    if (product) {
-      dispatchSave("save", product);
-    }
-  };
-
-  const dismissForm = () => {
-    dispatchDismiss("dismiss");
-  };
-
-  export let product: Product;
-
-  let errors: ZodFormattedError<Product> = {
-    _errors: [],
-  };
-
-  let enableSave = false;
-
-  $: {
-    enableSave = isValidateProduct(product);
+  interface Props {
+    product: Product;
+    onsave?: () => void;
+    ondismiss?: () => void;
   }
 
-  const isValidateProduct = (product: Product): boolean => {
-    const result = ProductSchema.safeParse(product);
-    if (result.success) {
-      errors = {
-        _errors: [],
-      };
-      return true;
-    } else {
-      errors = result.error.format();
-      return false;
-    }
-  };
+  let { product = $bindable(), onsave, ondismiss }: Props = $props();
+
+  let validationResult = $derived(ProductSchema.safeParse(product));
+  let errors = $derived(
+    validationResult.success ? { _errors: [] } : validationResult.error.format(),
+  );
+  let enableSave = $derived(validationResult.success);
 </script>
 
 <form>
@@ -108,12 +82,12 @@
   </div>
   <div class="row justify-content-end modal-footer">
     <div class="col-auto">
-      <button type="button" class="btn btn-secondary" on:click={dismissForm}
+      <button type="button" class="btn btn-secondary" onclick={ondismiss}
         >Close</button
       >
       <button
         class="btn btn-primary"
-        on:click={() => saveProduct(product)}
+        onclick={onsave}
         disabled={!enableSave}>Save Changes</button
       >
     </div>

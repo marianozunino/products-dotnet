@@ -3,13 +3,12 @@
 
   import { deleteProduct } from "$lib/api";
   import { products } from "$lib/store";
-  import { createEventDispatcher } from "svelte";
 
-  const dispatch = createEventDispatcher<{ edit: Product }>();
+  let { onedit }: { onedit: (product: Product) => void } = $props();
 
   const editProduct = (product: Product) => {
     if (product) {
-      dispatch("edit", product);
+      onedit(product);
     }
   };
 </script>
@@ -41,12 +40,12 @@
           >
           <td>
             <button
-              on:click={() => editProduct(product)}
+              onclick={() => editProduct(product)}
               class="btn btn-primary"
               data-bs-toggle="modal">Edit</button
             >
             <button
-              on:click={() => deleteProduct(product.id)}
+              onclick={() => deleteProduct(product.id)}
               class="btn btn-danger">Delete</button
             >
           </td>
